@@ -1,0 +1,233 @@
+// ============================================
+// 如果您想要复现，为了使用知识图谱需要下载neo4j，并在浏览器粘贴下列代码
+// ============================================
+
+
+// ============================================
+// 1. 创建部门节点
+// ============================================
+CREATE CONSTRAINT unique_department IF NOT EXISTS FOR (d:Department) REQUIRE d.name IS UNIQUE;
+
+// 主责部门
+MERGE (d1:Department {name: '北京市住房和城乡建设委员会', level: '市级', type: '主责部门'})
+MERGE (d2:Department {name: '北京市建设工程安全质量监督总站', level: '市级', type: '受委托组织'})
+MERGE (d3:Department {name: '北京市物业服务指导中心', level: '市级', type: '受委托组织'})
+MERGE (d4:Department {name: '北京住房公积金管理中心', level: '市级', type: '主责部门'})
+MERGE (d5:Department {name: '市/区城市管理委', level: '区级', type: '主责部门'})
+MERGE (d6:Department {name: '市/区水务局', level: '区级', type: '主责部门'})
+MERGE (d7:Department {name: '市/区城管执法局', level: '区级', type: '主责部门'})
+MERGE (d8:Department {name: '市/区不动产登记中心', level: '区级', type: '主责部门'})
+MERGE (d9:Department {name: '市/区人力资源和社会保障局', level: '区级', type: '主责部门'})
+MERGE (d10:Department {name: '市/区消防救援支队', level: '区级', type: '主责部门'})
+MERGE (d11:Department {name: '市/区交通委', level: '区级', type: '主责部门'})
+MERGE (d12:Department {name: '市/区园林绿化局', level: '区级', type: '主责部门'})
+MERGE (d13:Department {name: '市/区市场监管局', level: '区级', type: '主责部门'})
+MERGE (d14:Department {name: '街道办事处', level: '街道级', type: '协同部门'})
+MERGE (d15:Department {name: '生态环境局', level: '区级', type: '协同部门'})
+MERGE (d16:Department {name: '规划和自然资源委', level: '市级', type: '协同部门'});
+
+// ============================================
+// 2. 创建问题关键词节点
+// ============================================
+// 施工安全类
+MERGE (p1:Problem {keyword: '施工安全', category: '施工建设'})
+MERGE (p2:Problem {keyword: '工地隐患', category: '施工建设'})
+MERGE (p3:Problem {keyword: '扬尘污染', category: '施工建设'})
+MERGE (p4:Problem {keyword: '施工扰民', category: '施工建设'})
+MERGE (p5:Problem {keyword: '夜间施工', category: '施工建设'})
+
+// 物业纠纷类
+MERGE (p6:Problem {keyword: '物业纠纷', category: '物业管理'})
+MERGE (p7:Problem {keyword: '物业收费', category: '物业管理'})
+MERGE (p8:Problem {keyword: '停车费', category: '物业管理'})
+MERGE (p9:Problem {keyword: '群租房', category: '物业管理'})
+MERGE (p10:Problem {keyword: '违规出租', category: '物业管理'})
+
+// 房屋质量类
+MERGE (p11:Problem {keyword: '房屋质量', category: '房屋建设'})
+MERGE (p12:Problem {keyword: '房屋漏水', category: '房屋建设'})
+MERGE (p13:Problem {keyword: '竣工验收', category: '房屋建设'})
+MERGE (p14:Problem {keyword: '老旧小区改造', category: '房屋建设'})
+MERGE (p15:Problem {keyword: '加装电梯', category: '房屋建设'})
+
+// 公积金类
+MERGE (p16:Problem {keyword: '公积金贷款', category: '公积金'})
+MERGE (p17:Problem {keyword: '公积金提取', category: '公积金'})
+
+// 公共设施类
+MERGE (p18:Problem {keyword: '道路损坏', category: '公共设施'})
+MERGE (p19:Problem {keyword: '井盖缺失', category: '公共设施'})
+MERGE (p20:Problem {keyword: '路灯故障', category: '公共设施'})
+MERGE (p21:Problem {keyword: '电梯故障', category: '公共设施'})
+
+// 环境卫生类
+MERGE (p22:Problem {keyword: '垃圾堆积', category: '环境卫生'})
+MERGE (p23:Problem {keyword: '环境卫生', category: '环境卫生'})
+
+// 供水供暖类
+MERGE (p24:Problem {keyword: '停水', category: '供水供暖'})
+MERGE (p25:Problem {keyword: '水压不足', category: '供水供暖'})
+MERGE (p26:Problem {keyword: '供暖问题', category: '供水供暖'})
+MERGE (p27:Problem {keyword: '暖气不热', category: '供水供暖'})
+
+// 违法建设类
+MERGE (p28:Problem {keyword: '违章建筑', category: '违法建设'})
+MERGE (p29:Problem {keyword: '违法建设', category: '违法建设'})
+
+// 房产证类
+MERGE (p30:Problem {keyword: '房产证办理', category: '不动产登记'})
+
+// 停车类
+MERGE (p31:Problem {keyword: '停车管理', category: '交通'})
+
+// 消防类
+MERGE (p32:Problem {keyword: '消防通道堵塞', category: '消防安全'})
+MERGE (p33:Problem {keyword: '安全隐患', category: '消防安全'})
+
+// 工资类
+MERGE (p34:Problem {keyword: '拖欠工资', category: '劳动保障'})
+
+// 绿化类
+MERGE (p35:Problem {keyword: '绿化问题', category: '绿化'})
+
+
+// ============================================
+// 3. 创建关系（问题 → 主责部门）
+// ============================================
+// 施工安全类 → 住建委
+MATCH (p:Problem {keyword: '施工安全'})
+MATCH (d:Department {name: '北京市住房和城乡建设委员会'})
+MERGE (p)-[:HAS_RESPONSIBILITY {type: '主责', confidence: 0.95}]->(d);
+
+MATCH (p:Problem {keyword: '工地隐患'})
+MATCH (d:Department {name: '北京市住房和城乡建设委员会'})
+MERGE (p)-[:HAS_RESPONSIBILITY {type: '主责', confidence: 0.95}]->(d);
+
+// 施工扰民 → 住建委 + 生态环境局
+MATCH (p:Problem {keyword: '施工扰民'})
+MATCH (d1:Department {name: '北京市住房和城乡建设委员会'})
+MATCH (d2:Department {name: '生态环境局'})
+MERGE (p)-[:HAS_RESPONSIBILITY {type: '主责', confidence: 0.85}]->(d1)
+MERGE (p)-[:HAS_RESPONSIBILITY {type: '协同', confidence: 0.70}]->(d2);
+
+// 物业纠纷类 → 物业服务指导中心 + 街道办事处
+MATCH (p:Problem {keyword: '物业纠纷'})
+MATCH (d1:Department {name: '北京市物业服务指导中心'})
+MATCH (d2:Department {name: '街道办事处'})
+MERGE (p)-[:HAS_RESPONSIBILITY {type: '主责', confidence: 0.90}]->(d1)
+MERGE (p)-[:HAS_RESPONSIBILITY {type: '协同', confidence: 0.75}]->(d2);
+
+MATCH (p:Problem {keyword: '物业收费'})
+MATCH (d1:Department {name: '北京市物业服务指导中心'})
+MATCH (d2:Department {name: '街道办事处'})
+MERGE (p)-[:HAS_RESPONSIBILITY {type: '主责', confidence: 0.90}]->(d1)
+MERGE (p)-[:HAS_RESPONSIBILITY {type: '协同', confidence: 0.70}]->(d2);
+
+// 公积金类 → 公积金中心
+MATCH (p:Problem {keyword: '公积金贷款'})
+MATCH (d:Department {name: '北京住房公积金管理中心'})
+MERGE (p)-[:HAS_RESPONSIBILITY {type: '主责', confidence: 0.98}]->(d);
+
+MATCH (p:Problem {keyword: '公积金提取'})
+MATCH (d:Department {name: '北京住房公积金管理中心'})
+MERGE (p)-[:HAS_RESPONSIBILITY {type: '主责', confidence: 0.98}]->(d);
+
+// 道路损坏、井盖缺失 → 城市管理委
+MATCH (p:Problem {keyword: '道路损坏'})
+MATCH (d:Department {name: '市/区城市管理委'})
+MERGE (p)-[:HAS_RESPONSIBILITY {type: '主责', confidence: 0.92}]->(d);
+
+MATCH (p:Problem {keyword: '井盖缺失'})
+MATCH (d:Department {name: '市/区城市管理委'})
+MERGE (p)-[:HAS_RESPONSIBILITY {type: '主责', confidence: 0.92}]->(d);
+
+// 房屋质量 → 质量监督总站
+MATCH (p:Problem {keyword: '房屋质量'})
+MATCH (d:Department {name: '北京市建设工程安全质量监督总站'})
+MERGE (p)-[:HAS_RESPONSIBILITY {type: '主责', confidence: 0.94}]->(d);
+
+// 停水、水压不足 → 水务局
+MATCH (p:Problem {keyword: '停水'})
+MATCH (d:Department {name: '市/区水务局'})
+MERGE (p)-[:HAS_RESPONSIBILITY {type: '主责', confidence: 0.93}]->(d);
+
+MATCH (p:Problem {keyword: '水压不足'})
+MATCH (d:Department {name: '市/区水务局'})
+MERGE (p)-[:HAS_RESPONSIBILITY {type: '主责', confidence: 0.93}]->(d);
+
+// 违章建筑 → 城管执法局
+MATCH (p:Problem {keyword: '违章建筑'})
+MATCH (d:Department {name: '市/区城管执法局'})
+MERGE (p)-[:HAS_RESPONSIBILITY {type: '主责', confidence: 0.91}]->(d);
+
+// 房产证办理 → 不动产登记中心
+MATCH (p:Problem {keyword: '房产证办理'})
+MATCH (d:Department {name: '市/区不动产登记中心'})
+MERGE (p)-[:HAS_RESPONSIBILITY {type: '主责', confidence: 0.96}]->(d);
+
+// 拖欠工资 → 人社局
+MATCH (p:Problem {keyword: '拖欠工资'})
+MATCH (d:Department {name: '市/区人力资源和社会保障局'})
+MERGE (p)-[:HAS_RESPONSIBILITY {type: '主责', confidence: 0.94}]->(d);
+
+// 消防通道堵塞 → 消防救援支队 + 住建委
+MATCH (p:Problem {keyword: '消防通道堵塞'})
+MATCH (d1:Department {name: '市/区消防救援支队'})
+MATCH (d2:Department {name: '北京市住房和城乡建设委员会'})
+MERGE (p)-[:HAS_RESPONSIBILITY {type: '主责', confidence: 0.93}]->(d1)
+MERGE (p)-[:HAS_RESPONSIBILITY {type: '协同', confidence: 0.68}]->(d2);
+
+// 停车管理 → 交通委 + 物业
+MATCH (p:Problem {keyword: '停车管理'})
+MATCH (d1:Department {name: '市/区交通委'})
+MATCH (d2:Department {name: '北京市物业服务指导中心'})
+MERGE (p)-[:HAS_RESPONSIBILITY {type: '主责', confidence: 0.85}]->(d1)
+MERGE (p)-[:HAS_RESPONSIBILITY {type: '协同', confidence: 0.70}]->(d2);
+
+// 垃圾堆积 → 城市管理委
+MATCH (p:Problem {keyword: '垃圾堆积'})
+MATCH (d:Department {name: '市/区城市管理委'})
+MERGE (p)-[:HAS_RESPONSIBILITY {type: '主责', confidence: 0.90}]->(d);
+
+// 供暖问题 → 城市管理委（供热办）
+MATCH (p:Problem {keyword: '供暖问题'})
+MATCH (d:Department {name: '市/区城市管理委'})
+MERGE (p)-[:HAS_RESPONSIBILITY {type: '主责', confidence: 0.91}]->(d);
+
+// 电梯故障 → 市场监管局
+MATCH (p:Problem {keyword: '电梯故障'})
+MATCH (d:Department {name: '市/区市场监管局'})
+MERGE (p)-[:HAS_RESPONSIBILITY {type: '主责', confidence: 0.92}]->(d);
+
+// 绿化问题 → 园林绿化局
+MATCH (p:Problem {keyword: '绿化问题'})
+MATCH (d:Department {name: '市/区园林绿化局'})
+MERGE (p)-[:HAS_RESPONSIBILITY {type: '主责', confidence: 0.90}]->(d);
+
+
+// ============================================
+// 4. 创建部门之间的协同关系
+// ============================================
+MATCH (d1:Department {name: '北京市住房和城乡建设委员会'})
+MATCH (d2:Department {name: '街道办事处'})
+MERGE (d1)-[:COORDINATES_WITH {mechanism: '吹哨报到'}]->(d2);
+
+MATCH (d1:Department {name: '北京市物业服务指导中心'})
+MATCH (d2:Department {name: '街道办事处'})
+MERGE (d1)-[:COORDINATES_WITH {mechanism: '日常联动'}]->(d2);
+
+MATCH (d1:Department {name: '市/区住建委'})
+MATCH (d2:Department {name: '市/区城管执法局'})
+MERGE (d1)-[:COORDINATES_WITH {mechanism: '联合执法'}]->(d2);
+
+
+// ============================================
+// 5. 验证图谱
+// ============================================
+// 查看所有问题节点及其主责部门
+MATCH (p:Problem)-[r:HAS_RESPONSIBILITY {type: '主责'}]->(d:Department)
+RETURN p.keyword AS 问题关键词, d.name AS 主责部门, r.confidence AS 置信度
+ORDER BY p.category, r.confidence DESC;
+
+// 查看完整图谱统计
+MATCH (n) RETURN labels(n)[0] AS 节点类型, COUNT(n) AS 数量;
