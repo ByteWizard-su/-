@@ -76,7 +76,7 @@ pip install pandas numpy openpyxl requests tqdm jieba wordcloud matplotlib sciki
 
 ---
 
-📖 代码生成说明
+## 📖 代码生成说明
 本项目所有代码均由 DeepSeek 辅助生成。作者向DeepSeek描述数据分析需求和技术路线，DeepSeek生成代码框架和核心逻辑，作者在此基础上进行调试、优化和本地化适配。
 
 具体贡献：
