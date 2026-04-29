@@ -11,9 +11,9 @@
 **研究背景**：北京超大城市治理面临“数据丰富但智能应用不足”的问题，政务新媒体评论区存在海量非结构化诉求，导致“收集难、定责难、响应慢”。
 
 **技术路线**：
-- 🤖 **大语言模型**：识别诉求类型、抽取时间地点、判断情绪强度
-- 📊 **事件聚合**：基于地点+关键词双重聚合，追踪诉求演化路径
-- 🕸️ **知识图谱**：构建北京城乡建设领域权责关系图谱（Neo4j）
+-  **大语言模型**：识别诉求类型、抽取时间地点、判断情绪强度
+-  **事件聚合**：基于地点+关键词双重聚合，追踪诉求演化路径
+-  **知识图谱**：构建北京城乡建设领域权责关系图谱（Neo4j）
 
 **核心成果**：
 - ✅ 诉求识别准确率 **92.39%**
@@ -70,7 +70,7 @@
 pip install pandas numpy openpyxl requests tqdm jieba wordcloud matplotlib scikit-learn neo4j
 
 额外要求：
-运行 2_1FeatureExtraction.py 需要硅基流动 API 密钥
+运行 2_1FeatureExtraction.py 需要硅基流动 API 密钥（代码中密钥为本人配置，已删除不可用）
 运行 4knowledgegraph.py 需要Neo4j 数据库已安装并启动
 
 ```
@@ -79,3 +79,5 @@ pip install pandas numpy openpyxl requests tqdm jieba wordcloud matplotlib sciki
 ## 📖 代码生成说明
 本项目代码均由 DeepSeek 辅助生成。作者向DeepSeek描述数据分析需求和合适方法，DeepSeek生成代码框架和核心逻辑，作者在此基础上进行调试、优化和本地化适配。
 
+## 🙌 联系方式
+有任何疑问欢迎通过邮箱联系我:1262648535@qq.com
